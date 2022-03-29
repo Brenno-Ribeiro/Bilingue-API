@@ -15,7 +15,7 @@ namespace Bilingue.Application.Services
         private readonly IClassroomRepository _classroomRepository;
         private readonly IMapper _mapper;
 
-       
+
         public ClassroomAppService(IClassroomRepository classroomRepository, IMapper mapper)
         {
             _classroomRepository = classroomRepository;
@@ -23,12 +23,15 @@ namespace Bilingue.Application.Services
         }
 
 
-
         public async Task<bool> ClassroomExist(string number)
         {
             return await _classroomRepository.ClassroomExist(number);
         }
 
+        public async Task<bool> ClassroomExist(Guid id)
+        {
+            return await _classroomRepository.ClassroomExist(id);
+        }
 
         public async Task<bool> DeleteClassroom(Guid id)
         {
@@ -54,7 +57,7 @@ namespace Bilingue.Application.Services
 
         public async Task<ClassroomResponseViewModel> GetClassroomByNumber(string number)
         {
-            var classroom =  await _classroomRepository.GetClassroomByNumber(number);
+            var classroom = await _classroomRepository.GetClassroomByNumber(number);
             return _mapper.Map<ClassroomResponseViewModel>(classroom);
         }
 
@@ -65,32 +68,17 @@ namespace Bilingue.Application.Services
         }
 
 
-        public async Task<bool> InsertClassroom(string number)
+        public async Task<bool> InsertClassroom(SaveClassroomViewModel model)
         {
-            var model = new SaveClassroomViewModel
-            {
-                Number = number,
-                SchoolYear = DateTime.UtcNow.Year
-            };
-
             var classroom = _mapper.Map<Classroom>(model);
             return await _classroomRepository.SaveAsync(classroom);
         }
 
 
-
-        public async Task<bool> UpdateClassroom(ClassroomUpdateViewModel model)
+        public async Task<bool> UpdateClassroom(Guid id, ClassroomUpdateViewModel model)
         {
-            // todo: Refatorar a logíca de update da sala de aula
-            var classroom = await _classroomRepository.GetClassroomByNumber(model.OldNumber);
-
-            classroom.Number = model.NewNumber;
-
-            if (model.SchoolYear != 0)
-            {
-                classroom.SchoolYear = model.SchoolYear;
-            }
-  
+            var classroom = await _classroomRepository.GetByIdAsync(id);
+            _mapper.Map(model, classroom);
             return await _classroomRepository.UpdateAsync(classroom);
         }
 

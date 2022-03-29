@@ -1,14 +1,12 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Bilingue.Application.ViewModels
 {
     public class ClassroomUpdateViewModel
     {
         [Required]
-        public string OldNumber { get; set; }
-        [Required]
-        public string NewNumber { get; set; }
+        [MaxLength(50)]
+        public string Number { get; set; }
         public int SchoolYear { get; set; }
     }
 }

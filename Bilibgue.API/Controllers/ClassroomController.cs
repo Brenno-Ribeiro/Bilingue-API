@@ -44,50 +44,51 @@ namespace Bilibgue.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(ClassroomResponseViewModel), 201)]
-        public async Task<IActionResult> SaveClassroom(ClassroomRegistrationViewModel model)
+        public async Task<IActionResult> SaveClassroom(SaveClassroomViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Insire o número da turma");
             }
 
-            if (await _classroomAppService.ClassroomExist(model.ClassroomNumber))
+            if (await _classroomAppService.ClassroomExist(model.Number))
             {
-                return BadRequest($"Turma {model.ClassroomNumber} já existe no banco!");
+                return BadRequest($"Turma {model.Number} já existe no banco!");
             }
 
-            var result = await _classroomAppService.InsertClassroom(model.ClassroomNumber);
+            var result = await _classroomAppService.InsertClassroom(model);
 
             if (!result)
             {
                 return BadRequest("Ops! ocorreu um erro na insersão, estamos verificando o erro");
             }
 
-            var classroomResponse = await _classroomAppService.GetClassroomByNumber(model.ClassroomNumber);
+            var classroomResponse = await _classroomAppService.GetClassroomByNumber(model.Number);
 
             return StatusCode(201, new { Response = classroomResponse });
         }
 
 
         /// <summary>
-        ///     Atualiza um turma no banco de dados
+        ///     Atualiza uma turma no banco de dados
         /// </summary>
         /// <param name="model"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        [HttpPut("{Id}")]
-        public async Task<IActionResult> UpdateClassroom(ClassroomUpdateViewModel model)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateClassroom(Guid id, ClassroomUpdateViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Insire dados validos!");
             }
 
-            if (!await _classroomAppService.ClassroomExist(model.OldNumber))
+            if (!await _classroomAppService.ClassroomExist(id))
             {
-                return NotFound($"Turma {model.OldNumber} não existe!");
+                return StatusCode(404, new { Response = "Essa turma não existe!" });
             }
 
-            var result = await _classroomAppService.UpdateClassroom(model);
+            var result = await _classroomAppService.UpdateClassroom(id, model);
 
             if (!result)
             {
@@ -124,7 +125,7 @@ namespace Bilibgue.API.Controllers
                 return BadRequest("ops! ocorreu um erro na deleção, estamos resolvendo......");
             }
 
-            return StatusCode(200, new {Response = "Turma excluida com sucesso!"});
+            return StatusCode(200, new { Response = "Turma excluida com sucesso!" });
         }
     }
 }

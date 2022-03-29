@@ -16,6 +16,8 @@ namespace Bilingue.Application.Intefaces
         Task<bool> DeleteStudent(Guid id);
 
         Task<bool> StudentExist(string CPF);
+        Task<bool> StudentExist(Guid id);
+
         Task<StudentResponseViewModel> GetStudentAsyncByCpf(string CPF);
         Task<Guid> GetGuidStudentAsyncByCpf(string CPF);
     }

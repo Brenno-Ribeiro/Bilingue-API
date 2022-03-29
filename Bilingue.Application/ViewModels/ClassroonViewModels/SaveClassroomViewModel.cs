@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bilingue.Application.ViewModels
 {
     public class SaveClassroomViewModel
     {
         [Required]
+        [MaxLength(50)]
         public string Number { get; set; }
 
         [Required]

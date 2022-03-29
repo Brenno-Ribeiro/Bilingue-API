@@ -13,6 +13,7 @@ namespace Bilingue.Infra.Repository
         {
         }
 
+
         public async Task<Guid> GetGuidStudentAsyncByCpf(string CPF)
         {
             var studentId = Guid.Empty;
@@ -33,13 +34,19 @@ namespace Bilingue.Infra.Repository
             return studentId;
         }
 
-
         public async Task<Student> GetStudentAsyncByCpf(string CPF)
         {
             return await _context.Students
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Cpf.Equals(CPF));
         }
+
+
+        public async Task<bool> StudentExist(Guid id)
+        {
+            return await _context.Students.AnyAsync(x => x.Id.Equals(id));
+        }
+
 
 
         public async Task<bool> StudentExist(string CPF)

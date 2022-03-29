@@ -50,8 +50,6 @@ namespace Bilibgue.API.Controllers
         /// <param name="model"></param>
         /// <response code="200">Retorna os dados do aluno e sua turma</response>
         /// <response code="400">Retorna uma mensagem de requisição mal sucedida</response>
-        /// <response code="401">Retorna uma mensagem de não encintrado</response>
-        /// <response code="500">Retorna uma mensagem de erro no servidor</response>
         [HttpPost]
         [ProducesResponseType(typeof(RegistrationResponseNoListViewModel), 201)]
         public async Task<IActionResult> SaveStudent(SaveStudentViewModel model)
@@ -114,6 +112,11 @@ namespace Bilibgue.API.Controllers
                 return BadRequest("Por Favor, insire dados validos!!");
             }
 
+            if (!await _studentAppService.StudentExist(id))
+            {
+                return StatusCode(404, new { Response = "Aluno não existe!" });
+            }
+
             var result = await _studentAppService.UpdateStudent(id,model);
 
             if (!result)
@@ -126,7 +129,7 @@ namespace Bilibgue.API.Controllers
 
 
         /// <summary>
-        ///     Deleta um aluno na base de dados
+        ///     Exclui um aluno na base de dados
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

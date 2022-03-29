@@ -18,6 +18,11 @@ namespace Bilingue.Infra.Repository
             return await _context.Classrooms.AnyAsync(x => x.Number == number);
         }
 
+        public async Task<bool> ClassroomExist(Guid guid)
+        {
+            return await _context.Classrooms.AnyAsync(x => x.Id == guid);
+        }
+
         public async Task<Classroom> GetClassroomByNumber(string number)
         {
             return await _context.Classrooms

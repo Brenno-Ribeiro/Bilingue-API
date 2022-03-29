@@ -21,6 +21,8 @@ namespace Bilibgue.API
 {
     public class Startup
     {
+      
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -75,7 +77,20 @@ namespace Bilibgue.API
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Bilingue", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Bilingue",
+                    Version = "v1",
+                    Description = "API Curso de idiomas",
+
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Brenno Caldas Ribeiro",
+                        Email = "brennodevelop100@gmail.com",
+                        Url = new Uri("https://www.linkedin.com/in/brennocaldas/")
+                    },
+                    
+                }); 
 
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -85,7 +100,6 @@ namespace Bilibgue.API
 
             });
         }
-
 
 
 

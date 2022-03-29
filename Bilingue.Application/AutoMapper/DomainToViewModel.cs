@@ -13,6 +13,7 @@ namespace Bilingue.Application.AutoMapper
         {
             CreateMap<Student, StudentResponseViewModel>();
             CreateMap<Classroom, ClassroomResponseViewModel>();
+            CreateMap<Classroom, ClassroomUpdateViewModel>();
             CreateMap<Registration, RegistrationResponseWithListViewModel>();
         }
     }

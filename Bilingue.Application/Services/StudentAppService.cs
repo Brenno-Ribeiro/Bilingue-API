@@ -65,32 +65,15 @@ namespace Bilingue.Application.Services
 
         public async Task<bool> UpdateStudent(Guid id, UpdateStudentViewModel model)
         {
-            //todo: Refatorar a logíca de update do aluno
-            var properties = model.GetType().GetProperties();
-            var values = new Dictionary<string, string>();
-
-            for (int i = 0; i < properties.Length; i++)
-            {
-                var property = GetPropValue(model, properties[i].Name);
-
-                if (property.Equals("string") || property.Equals(0))
-                {
-                    continue;
-                }
-
-                values.Add(properties[i].Name, property.ToString());
-            }
-
-            var student = _mapper.Map<Student>(values);
-            student.Id = id;    
-
+            var student = await _studentRespository.GetByIdAsync(id);
+            _mapper.Map(model, student);
             return await _studentRespository.UpdateAsync(student);
-
         }
 
-        private static object GetPropValue(object src, string propName)
+
+        public async Task<bool> StudentExist(Guid id)
         {
-            return src.GetType().GetProperty(propName).GetValue(src, null);
+            return await _studentRespository.StudentExist(id);
         }
     }
 }
