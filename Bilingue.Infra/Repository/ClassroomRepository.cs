@@ -23,6 +23,13 @@ namespace Bilingue.Infra.Repository
             return await _context.Classrooms.AnyAsync(x => x.Id == guid);
         }
 
+        public async Task<bool> ClassroomExist(string currentClassroom, string transferTo)
+        {
+            var oldClassrrom = await _context.Classrooms.AnyAsync(x => x.Number.Equals(currentClassroom));
+            var newClassroom = await _context.Classrooms.AnyAsync(x => x.Number.Equals(transferTo));
+            return oldClassrrom.Equals(true) && newClassroom.Equals(true);
+        }
+
         public async Task<Classroom> GetClassroomByNumber(string number)
         {
             return await _context.Classrooms
@@ -64,5 +71,6 @@ namespace Bilingue.Infra.Repository
               .AsNoTracking()
               .CountAsync(x => x.Classroom.Id.Equals(id));
         }
+
     }
 }

@@ -2,6 +2,8 @@
 using Bilingue.Application.Intefaces;
 using Bilingue.Application.ViewModels;
 using Bilingue.Application.ViewModels.StudentViewModels;
+using Bilingue.Domain.DomainRegistraition;
+using Bilingue.Domain.DomainRegistraition.Repository;
 using Bilingue.Domain.DomainStudent;
 using Bilingue.Domain.DomainStudent.Repository;
 using System;
@@ -13,11 +15,13 @@ namespace Bilingue.Application.Services
     public class StudentAppService : IStudentAppService
     {
         private readonly IStudentRespository _studentRespository;
+        private readonly IRegistrationRepository _registrationRespository;
         private readonly IMapper _mapper;
 
-        public StudentAppService(IStudentRespository studentRespository, IMapper mapper)
+        public StudentAppService(IStudentRespository studentRespository, IRegistrationRepository registrationRespository, IMapper mapper)
         {
             _studentRespository = studentRespository;
+            _registrationRespository = registrationRespository;
             _mapper = mapper;
         }
 
@@ -74,6 +78,20 @@ namespace Bilingue.Application.Services
         public async Task<bool> StudentExist(Guid id)
         {
             return await _studentRespository.StudentExist(id);
+        }
+
+        public async Task<bool> TransferStudent(Guid studentId, Guid currentClassroomId, Guid transferClassroomId)
+        { 
+            var registrationId = _registrationRespository.GetGuidRegistration(studentId, currentClassroomId);
+
+            var registration = new Registration
+            {
+                Id = registrationId,
+                ClassroomId = transferClassroomId,
+                StudentId = studentId
+            };
+
+            return await _registrationRespository.UpdateAsync(registration);
         }
     }
 }

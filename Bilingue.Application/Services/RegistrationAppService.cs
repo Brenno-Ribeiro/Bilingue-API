@@ -67,6 +67,18 @@ namespace Bilingue.Application.Services
             return registrationResponse;
         }
 
+        public async Task<RegistrationResponseNoListViewModel> GetRegistrationAsync(Guid studentId, Guid classroomId)
+        {
+            var registration = await _registrationRepository.GetRegistration(studentId,classroomId);
+
+            var registrationResponse = new RegistrationResponseNoListViewModel();
+
+            registrationResponse.Student = _mapper.Map<StudentResponseViewModel>(registration.Student);
+            registrationResponse.Classroom = _mapper.Map<ClassroomResponseViewModel>(registration.Classroom);
+
+            return registrationResponse;
+        }
+
         public async Task<bool> InsertRegistration(Guid studentId, Guid classroomId)
         {
             var registration = new Registration

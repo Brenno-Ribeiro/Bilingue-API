@@ -20,5 +20,7 @@ namespace Bilingue.Application.Intefaces
 
         Task<StudentResponseViewModel> GetStudentAsyncByCpf(string CPF);
         Task<Guid> GetGuidStudentAsyncByCpf(string CPF);
+
+        Task<bool> TransferStudent(Guid studentid, Guid currentClassroomId, Guid transferClassroomId);
     }
 }

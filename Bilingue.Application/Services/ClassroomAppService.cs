@@ -33,6 +33,11 @@ namespace Bilingue.Application.Services
             return await _classroomRepository.ClassroomExist(id);
         }
 
+        public async Task<bool> ClassroomExist(string currentClassroom, string transferTo)
+        {
+            return await _classroomRepository.ClassroomExist(currentClassroom,transferTo);
+        }
+
         public async Task<bool> DeleteClassroom(Guid id)
         {
             var classroom = await _classroomRepository.GetByIdAsync(id);

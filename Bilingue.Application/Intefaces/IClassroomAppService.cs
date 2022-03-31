@@ -14,6 +14,7 @@ namespace Bilingue.Application.Intefaces
         Task<bool> DeleteClassroom(Guid id);
 
         Task<bool> ClassroomExist(string number);
+        Task<bool> ClassroomExist(string currentClassroom, string transferTo);
         Task<bool> ClassroomExist(Guid id);
 
         Task<int> VerifyQuantityStudentInClassroom(string number);

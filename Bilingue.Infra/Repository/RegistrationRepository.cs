@@ -15,11 +15,22 @@ namespace Bilingue.Infra.Repository
         {
         }
 
+        public Guid GetGuidRegistration(Guid studentId, Guid classroomId)
+        {
+            return _context.Registrations
+                 .AsNoTracking()
+                 .FirstOrDefaultAsync(x => x.StudentId.Equals(studentId) && x.ClassroomId.Equals(classroomId))
+                 .Result
+                 .Id;
+        }
+
         public async Task<Registration> GetRegistration(Guid studentId, Guid classroomId)
         {
             return await _context.Registrations
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.StudentId.Equals(studentId) && x.ClassroomId.Equals(classroomId));
+                .Include("Student")
+                .Include("Classroom")
+                .FirstOrDefaultAsync(x => x.Student.Id.Equals(studentId) && x.Classroom.Id.Equals(classroomId));
         }
 
         public async Task<Registration> GetRegistration(string CPF, string classromNumber)

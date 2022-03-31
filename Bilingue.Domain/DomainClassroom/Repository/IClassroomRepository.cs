@@ -9,6 +9,7 @@ namespace Bilingue.Domain.DomainClassroom.Repository
         Task<int> VerifyQuantityStudentInClassroom(string number);
         Task<int> VerifyQuantityStudentInClassroom(Guid id);
         Task<bool> ClassroomExist(string number);
+        Task<bool> ClassroomExist(string currentClassroom, string transferTo);
         Task<bool> ClassroomExist(Guid guid);
         Task<Classroom> GetClassroomByNumber(string number);
         Task<Guid> GetGuidClassroomByNumber(string number);

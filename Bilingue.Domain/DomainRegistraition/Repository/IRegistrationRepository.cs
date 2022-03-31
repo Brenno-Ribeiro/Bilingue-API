@@ -9,11 +9,13 @@ namespace Bilingue.Domain.DomainRegistraition.Repository
     {
         Task<IEnumerable<Registration>> GetRegistrationsJoins(Guid id);
 
-        Task<Registration> GetRegistration(string CPF,string classromNumber);
-
         Task<bool> RegistrationExist(Registration registration);
-
         Task<List<Registration>> GetRegistrationRage(Guid id);
+
+
         Task<Registration> GetRegistration(Guid studentId, Guid classroomId);
+        Task<Registration> GetRegistration(string CPF, string classromNumber);
+
+         Guid GetGuidRegistration(Guid studentId, Guid classroomId);
     }
 }

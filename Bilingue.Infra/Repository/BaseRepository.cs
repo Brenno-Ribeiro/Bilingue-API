@@ -37,7 +37,7 @@ namespace Bilingue.Infra.Repository
 
         public async Task<bool> UpdateAsync(T entity)
         {
-            _context.Update<T>(entity);
+            _context.Update(entity);
             return await _context.SaveChangesAsync() > 0;      
         }
 

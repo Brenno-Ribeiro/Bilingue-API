@@ -71,9 +71,8 @@ namespace Bilibgue.API.Controllers
                 return StatusCode(404, new { message = "Essa turma ainda não existe no banco de dados!" });
             }
 
-            var quantityStudentInClassroom = await _classroomAppService.VerifyQuantityStudentInClassroom(model.Classroom);
 
-            if (quantityStudentInClassroom > 5)
+            if (await _classroomAppService.VerifyQuantityStudentInClassroom(model.Classroom) >= 5)
             {
                 return StatusCode(400, new { message = "Essa turma está cheia!" });
             }
@@ -104,8 +103,8 @@ namespace Bilibgue.API.Controllers
         /// <param name="id"></param>
         ///  <response code="200">Retorna os dados atualizados</response>
         [HttpPut("{id}")]
-        [ProducesResponseType(typeof(StudentResponseViewModel),200)]
-        public async Task<IActionResult> UpdateStudent(Guid id ,UpdateStudentViewModel model)
+        [ProducesResponseType(typeof(StudentResponseViewModel), 200)]
+        public async Task<IActionResult> UpdateStudent(Guid id, UpdateStudentViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -117,7 +116,7 @@ namespace Bilibgue.API.Controllers
                 return StatusCode(404, new { Response = "Aluno não existe!" });
             }
 
-            var result = await _studentAppService.UpdateStudent(id,model);
+            var result = await _studentAppService.UpdateStudent(id, model);
 
             if (!result)
             {
@@ -126,6 +125,59 @@ namespace Bilibgue.API.Controllers
 
             return StatusCode(200, new { Response = "Aluno atualizado com sucesso" });
         }
+
+
+        /// <summary>
+        ///     Realiza a transferência de um aluno para outra turma
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="studentId"></param>
+        ///  <response code="200">Retorna os dados atualizados</response>
+        [HttpPut("{studentId}/")]
+        [ProducesResponseType(typeof(RegistrationResponseNoListViewModel), 200)]
+        public async Task<IActionResult> TransferStudent(Guid studentId, TransferStudentViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Por Favor, insire dados validos!!");
+            }
+
+            if (!await _studentAppService.StudentExist(studentId))
+            {
+                return StatusCode(404, new { Response = "Aluno não existe!" });
+            }
+
+            if (!await _classroomAppService.ClassroomExist(model.CurrentClassroom, model.TransferTo))
+            {
+                return StatusCode(404, new { message = $"Turma {model.CurrentClassroom} ou {model.TransferTo} não existe na base dados!" });
+            }
+
+            if (await _classroomAppService.VerifyQuantityStudentInClassroom(model.TransferTo) >= 5)
+            {
+                return StatusCode(400, new { message = $"A turma {model.TransferTo} está cheia" });
+            }
+
+            var currentClassroomId = await _classroomAppService.GetGuidClassroomByNumber(model.CurrentClassroom);
+            var transferClassroomId = await _classroomAppService.GetGuidClassroomByNumber(model.TransferTo);
+
+
+            if (await _registrationAppService.RegistrationExist(studentId, transferClassroomId))
+            {
+                return StatusCode(400, new { message = $"O aluno já esta na {model.TransferTo} turma!" });
+            }
+
+            if (!await _registrationAppService.RegistrationExist(studentId, currentClassroomId))
+            {
+                return StatusCode(400, new { message = $"O aluno não está na turma {model.CurrentClassroom} informada!" });
+            }
+
+            await _studentAppService.TransferStudent(studentId, currentClassroomId, transferClassroomId);
+
+            var registration = await _registrationAppService.GetRegistrationAsync(studentId, transferClassroomId);
+
+            return StatusCode(200, new { Trasferencia = registration });
+        }
+
 
 
         /// <summary>

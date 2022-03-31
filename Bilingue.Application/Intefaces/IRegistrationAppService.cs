@@ -1,7 +1,5 @@
 ﻿using Bilingue.Application.ViewModels;
-using Bilingue.Domain.DomainRegistraition;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Bilingue.Application.Intefaces
@@ -10,7 +8,7 @@ namespace Bilingue.Application.Intefaces
     {
         Task<RegistrationResponseWithListViewModel> GetRegistrationAsync(Guid id);
         Task<RegistrationResponseNoListViewModel> GetRegistrationAsync(string CPF,string classnumber);
-
+        Task<RegistrationResponseNoListViewModel> GetRegistrationAsync(Guid studentId, Guid classroomId);
 
         Task<bool> RegistrationExist(Guid studentId, Guid classroomId);
 
